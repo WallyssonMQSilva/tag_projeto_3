@@ -1,4 +1,4 @@
-import coloracao
+import coloracao, visualizacao
 
 def montagem_grafo(times, partidas, rodadas, restricoes_mandantes, restricoes_rodadas):
 	#todo vertice no grafo recebera um identificador numerico
@@ -77,15 +77,36 @@ def main():
     	(("CFC", "TFC"), 3)
     ]
     
+    def formatar(valor): #exibe um valor formatado na tela: rodada ou partida
+    	if type(valor) == int:
+    		return "Rodada " + str(valor)
+    	else:
+    		return valor[0] + ' X ' + valor[1]
+    
     grafo, v_to_id, id_to_v = montagem_grafo(times, partidas, rodadas, restricoes_mandantes, restricoes_rodadas)
     
-    cores = coloracao.coloracao(grafo, 14)
-    for i in range(len(rodadas)):
-    	print("Rodada", rodadas[i])
+    print("Legenda:")
+    for i in grafo:
+    	print(formatar(id_to_v[i]) + ':', i)
+    
+    print('\nFeche a janela para exibir a solução com a coloração\n')
+    
+    visualizacao.visualizar(grafo, "Configuração Inicial")
+    
+    cores = coloracao.coloracao(grafo, 14) #encontrar solucao
+    
+    #exibir a solucao na tela
+    for i in range(len(rodadas)): 
+    	print("Rodada", str(rodadas[i]) + ':', "(cor:", cores[v_to_id[rodadas[i]]] + ')')
     	for j in range(len(grafo)):
+    		if type(id_to_v[j]) == int:
+    			continue #nao printar rodadas
     		if cores[j] == cores[v_to_id[rodadas[i]]]:
-    			print(id_to_v[j])
+    			print(formatar(id_to_v[j]))
     	print()
+    	
+    	
+    visualizacao.visualizar(grafo, "Coloração Final", cores)
 
 
 if __name__ == "__main__":
